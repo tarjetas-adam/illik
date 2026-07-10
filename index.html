@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Illik</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0c0c0b; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script>
+    // Make React hooks available globally
+    window.useState = React.useState;
+    window.useEffect = React.useEffect;
+    window.useRef = React.useRef;
+  </script>
+
+  <script type="text/babel">
+    // Shim imports so the JSX file works without a bundler
+    const { Search, Play, Heart, Star, MapPin, Globe, Clock,
+            ChevronLeft, ChevronRight, X, Check,
+            Calendar: CalendarIcon, User, Settings, LogOut,
+            Plus, Pencil, Video } = LucideReact;
+
+    const { useState, useEffect, useRef } = React;
+  </script>
+
+  <script type="text/babel" src="illik_mvp.jsx"></script>
+
+  <script type="text/babel">
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(IllikApp));
+  </script>
+</body>
+</html>
