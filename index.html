@@ -4,66 +4,1569 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Illik</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0c0c0b; }
-  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <style>* { margin:0; padding:0; box-sizing:border-box; } body { background:#0c0c0b; font-family:-apple-system,BlinkMacSystemFont,sans-serif; }</style>
 </head>
 <body>
   <div id="root"></div>
-
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.23.2/babel.min.js"></script>
   <script>
-    // Make React available globally
-    window.useState = React.useState;
-    window.useEffect = React.useEffect;
-    window.useRef = React.useRef;
-
-    // Lucide icons as simple SVG components
-    function makeIcon(path, opts) {
-      return function Icon({ size = 24, color = 'currentColor', style, fill = 'none', ...rest }) {
-        return React.createElement('svg', {
-          xmlns: 'http://www.w3.org/2000/svg',
-          width: size, height: size,
-          viewBox: '0 0 24 24',
-          fill: fill,
-          stroke: color,
-          strokeWidth: 2,
-          strokeLinecap: 'round',
-          strokeLinejoin: 'round',
-          style: style,
-          ...rest
-        }, ...path.map(d => React.createElement('path', { d })));
-      };
-    }
-
-    window.Search = makeIcon(['M21 21l-4.35-4.35','M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z']);
-    window.Play = makeIcon(['M5 3l14 9-14 9V3z']);
-    window.Heart = makeIcon(['M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z']);
-    window.Star = makeIcon(['M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z']);
-    window.MapPin = makeIcon(['M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z','M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z']);
-    window.Globe = makeIcon(['M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z','M2 12h20','M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z']);
-    window.Clock = makeIcon(['M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z','M12 6v6l4 2']);
-    window.ChevronLeft = makeIcon(['M15 18l-6-6 6-6']);
-    window.ChevronRight = makeIcon(['M9 18l6-6-6-6']);
-    window.X = makeIcon(['M18 6L6 18','M6 6l12 12']);
-    window.Check = makeIcon(['M20 6L9 17l-5-5']);
-    window.CalendarIcon = makeIcon(['M3 4h18v18H3V4z','M16 2v4','M8 2v4','M3 10h18']);
-    window.User = makeIcon(['M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2','M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z']);
-    window.Settings = makeIcon(['M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z','M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z']);
-    window.LogOut = makeIcon(['M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4','M16 17l5-5-5-5','M21 12H9']);
-    window.Plus = makeIcon(['M12 5v14','M5 12h14']);
-    window.Pencil = makeIcon(['M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7','M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z']);
-    window.Video = makeIcon(['M23 7l-7 5 7 5V7z','M1 5h15v14H1V5z']);
+    const {useState,useEffect,useRef} = React;
+    const _ic = (pp) => ({size:20,color:"currentColor",fill:"none",style:undefined,...p}={}) =>
+      React.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",width:p.size||20,height:p.size||20,viewBox:"0 0 24 24",fill:p.fill||"none",stroke:p.color||"currentColor",strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round",style:p.style},...pp.map(d=>React.createElement("path",{d})));
+    const mkI = (paths) => function Icon({size=20,color="currentColor",fill="none",style,...rest}={}) {
+      return React.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",width:size,height:size,viewBox:"0 0 24 24",fill,stroke:color,strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round",style,...rest},...paths.map(d=>React.createElement("path",{d})));
+    };
+    const Search=mkI(["M21 21l-4.35-4.35","M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"]);
+    const Play=mkI(["M5 3l14 9-14 9V3z"]);
+    const Heart=mkI(["M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"]);
+    const Star=mkI(["M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"]);
+    const MapPin=mkI(["M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z","M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"]);
+    const Globe=mkI(["M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z","M2 12h20","M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"]);
+    const Clock=mkI(["M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z","M12 6v6l4 2"]);
+    const ChevronLeft=mkI(["M15 18l-6-6 6-6"]);
+    const ChevronRight=mkI(["M9 18l6-6-6-6"]);
+    const X=mkI(["M18 6L6 18","M6 6l12 12"]);
+    const Check=mkI(["M20 6L9 17l-5-5"]);
+    const CalendarIcon=mkI(["M3 4h18v18H3V4z","M16 2v4","M8 2v4","M3 10h18"]);
+    const User=mkI(["M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2","M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"]);
+    const Settings=mkI(["M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z","M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"]);
+    const LogOut=mkI(["M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4","M16 17l5-5-5-5","M21 12H9"]);
+    const Plus=mkI(["M12 5v14","M5 12h14"]);
+    const Pencil=mkI(["M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7","M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"]);
+    const Video=mkI(["M23 7l-7 5 7 5V7z","M1 5h15v14H1V5z"]);
   </script>
-
-  <script type="text/babel" src="illik_mvp.jsx"></script>
-
   <script type="text/babel">
+
+
+
+/* ----------------------------------------------------------------------
+   ILLIK MVP — Discovery & Booking Platform
+   Structure:
+   1. MOCK DATA — therapists, bookings
+   2. PATIENT VIEWS — Landing, Results, Profile, Booking, Auth
+   3. THERAPIST VIEWS — Dashboard, Profile Editor, Bookings, Availability
+   4. ROOT APP — view router + shared state
+   -------------------------------------------------------------------- */
+
+// ---------------------- 1. MOCK DATA ----------------------
+
+const TOPICS = [
+  "Nem tudom megnevezni",
+  "Stressz",
+  "Énkép",
+  "Depresszió",
+  "Kapcsolatok",
+  "Párkapcsolat",
+  "Önértékelés",
+  "Szorongás",
+  "Életesemények",
+  "Dühkezelés",
+  "Szomorúság",
+  "Trauma",
+  "Magány",
+  "Alvászavar",
+  "Kiégés",
+  "Gyász",
+  "Zaklatás/bullying",
+  "Munka-magánélet egyensúly",
+  "Konfliktuskezelés",
+  "Pályaválasztás, karrier",
+];
+
+const TOPIC_GROUPS = [
+  { label: null, items: ["Nem tudom megnevezni", "Stressz", "Énkép", "Depresszió", "Kapcsolatok", "Párkapcsolat", "Önértékelés", "Szorongás"] },
+  { label: "Személyes problémák", items: ["Életesemények", "Dühkezelés", "Szomorúság", "Trauma", "Magány", "Alvászavar", "Kiégés", "Gyász", "Zaklatás/bullying", "Munka-magánélet egyensúly"] },
+  { label: "Személyes növekedés", items: ["Konfliktuskezelés", "Pályaválasztás, karrier"] },
+];
+
+const BASE_THERAPISTS = [
+  {
+    id: 1,
+    name: "Kovács Anna",
+    title: "Klinikai szakpszichológus",
+    years: 6,
+    price: 20000,
+    rating: 4.9,
+    reviewCount: 28,
+    locations: ["Budapest, XI. kerület", "Online"],
+    languages: ["Magyar", "English"],
+    tags: ["Szorongás", "Önbizalom", "Kapcsolatok"],
+    bio: "Azokkal dolgozom szívesen, akik szeretnének jobban megérteni magukat és a kapcsolataikat, és változást szeretnének elérni az életükben. Fontos számomra a biztonságos, ítélkezésmentes tér, ahol őszintén lehet beszélni.",
+    spectrum: { supportive: 5, structured: 3, direct: 2, experienced: 5 },
+    videoColor: "#76875A",
+    avatarColor: "#76875A",
+    initials: "KA",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a01.jpg",
+    availability: genSlots(1),
+  },
+  {
+    id: 2,
+    name: "Varga Márk",
+    title: "Pszichológus, szupervízió alatt",
+    years: 1,
+    price: 14000,
+    rating: 4.8,
+    reviewCount: 16,
+    locations: ["Budapest, VI. kerület"],
+    languages: ["Magyar"],
+    tags: ["Stresszkezelés", "Pánik", "Önismeret"],
+    bio: "Párkapcsolati nehézségekkel és korai traumákkal foglalkozom. Pszichoanalitikus szemléletű, de rugalmas megközelítéssel dolgozom, mindig a kliens tempójára figyelve.",
+    spectrum: { supportive: 4, structured: 3, direct: 4, experienced: 2 },
+    videoColor: "#CECBF6",
+    avatarColor: "#CECBF6",
+    initials: "VM",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a02.jpg",
+    availability: genSlots(2),
+  },
+  {
+    id: 3,
+    name: "Tóth Gabriella",
+    title: "Klinikai szakpszichológus",
+    years: 11,
+    price: 25000,
+    rating: 4.9,
+    reviewCount: 34,
+    locations: ["Budapest, II. kerület", "Online"],
+    languages: ["Magyar", "English"],
+    tags: ["Gyász", "Trauma", "Kapcsolatok"],
+    bio: "Depresszióval, veszteséggel és életközepi krízisekkel foglalkozom. Hosszú évek alatt szerzett tapasztalattal, nyugodt, megalapozott jelenléttel kísérem végig a folyamatot.",
+    spectrum: { supportive: 5, structured: 4, direct: 2, experienced: 5 },
+    videoColor: "#F5C4B3",
+    avatarColor: "#F5C4B3",
+    initials: "TG",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a03.jpg",
+    availability: genSlots(3),
+  },
+  {
+    id: 4,
+    name: "Szabó Dóra",
+    title: "Pszichológus",
+    years: 3,
+    price: 16000,
+    rating: 4.7,
+    reviewCount: 19,
+    locations: ["Online"],
+    languages: ["Magyar", "English"],
+    tags: ["Szorongás", "Önbizalom", "Karrier"],
+    bio: "Fiatal felnőttekkel dolgozom, akik életük egy átalakuló időszakát élik. Közvetlen, gyakorlatias eszközöket adok, amiket a mindennapokban azonnal tudsz használni.",
+    spectrum: { supportive: 4, structured: 4, direct: 5, experienced: 2 },
+    videoColor: "#E8D5A8",
+    avatarColor: "#E8D5A8",
+    initials: "SD",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a04.jpg",
+    availability: genSlots(4),
+  },
+  {
+    id: 5,
+    name: "Nagy Péter",
+    title: "Klinikai szakpszichológus",
+    years: 8,
+    price: 22000,
+    rating: 4.8,
+    reviewCount: 22,
+    locations: ["Budapest, XIII. kerület", "Online"],
+    languages: ["Magyar"],
+    tags: ["Szorongás", "Pánik", "Önismeret"],
+    bio: "Szorongással és pánikrohamokkal élő felnőtteket segítek megérteni és kezelni tüneteiket, kognitív viselkedésterápiás eszközökkel, strukturált, célorientált munkamóddal.",
+    spectrum: { supportive: 3, structured: 5, direct: 4, experienced: 4 },
+    videoColor: "#A8C5E8",
+    avatarColor: "#A8C5E8",
+    initials: "NP",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a05.jpg",
+    availability: genSlots(5),
+  },
+  {
+    id: 6,
+    name: "Varga Márta",
+    title: "Pszichoterapeuta",
+    years: 14,
+    price: 24000,
+    rating: 5.0,
+    reviewCount: 41,
+    locations: ["Budapest, V. kerület"],
+    languages: ["Magyar", "Deutsch"],
+    tags: ["Párkapcsolat", "Családi kapcsolatok"],
+    bio: "Pároknak és családoknak segítek megtalálni a közös hangot. Több mint egy évtizede dolgozom rendszerszemléletű megközelítéssel, sok empátiával és kevés ítélkezéssel.",
+    spectrum: { supportive: 5, structured: 4, direct: 3, experienced: 5 },
+    videoColor: "#D4A8C5",
+    avatarColor: "#D4A8C5",
+    initials: "VM",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a06.jpg",
+    availability: genSlots(6),
+  },
+];
+
+function genSlots(seed) {
+  // Generate next 14 days, with some days having 2-3 free slots, some none (waitlist case)
+  const days = [];
+  const today = new Date(2026, 5, 18); // June 18 2026
+  for (let i = 1; i <= 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    const pseudo = (seed * 31 + i * 17) % 5;
+    let slots = [];
+    if (pseudo === 0) slots = [];
+    else if (pseudo === 1) slots = ["09:00"];
+    else if (pseudo === 2) slots = ["14:00", "17:00"];
+    else if (pseudo === 3) slots = ["10:00", "13:00", "18:00"];
+    else slots = ["16:00"];
+    days.push({ date: d, slots });
+  }
+  return days;
+}
+
+const FIRST_NAMES_F = ["Anna", "Eszter", "Zsófia", "Réka", "Júlia", "Katalin", "Beáta", "Mária", "Krisztina", "Petra", "Nóra", "Ágnes", "Veronika", "Dóra", "Gabriella", "Andrea", "Ildikó", "Orsolya", "Viktória", "Csilla"];
+const FIRST_NAMES_M = ["Márk", "Péter", "Gábor", "Zoltán", "Tamás", "Bence", "László", "András", "Dávid", "Balázs", "Ákos", "Csaba", "Norbert", "Levente", "Attila", "Gergő", "Krisztián", "Sándor", "Ferenc", "Roland"];
+const LAST_NAMES = ["Kovács", "Tóth", "Varga", "Szabó", "Nagy", "Horváth", "Kiss", "Molnár", "Németh", "Farkas", "Balogh", "Papp", "Takács", "Juhász", "Lakatos", "Mészáros", "Oláh", "Simon", "Rácz", "Fehér", "Szilágyi", "Pataki", "Vass", "Görög", "Sárközi"];
+const TITLES = ["Klinikai szakpszichológus", "Pszichológus", "Pszichológus jelölt", "Pszichoterapeuta", "Tanácsadó szakpszichológus", "Pszichológus, szupervízió alatt"];
+const NEIGHBORHOODS = ["I. kerület", "II. kerület", "III. kerület", "V. kerület", "VI. kerület", "VII. kerület", "VIII. kerület", "IX. kerület", "XI. kerület", "XII. kerület", "XIII. kerület", "XIV. kerület"];
+const LANG_SETS = [["Magyar"], ["Magyar", "English"], ["Magyar", "English", "Deutsch"], ["Magyar", "Deutsch"]];
+const COLOR_POOL = ["#9FE1CB", "#CECBF6", "#F5C4B3", "#E8D5A8", "#A8C5E8", "#D4A8C5", "#B8D8C8", "#E0C9A6", "#C9B8E0", "#A6D0C9"];
+
+function mulberry32(seed) {
+  let a = seed;
+  return function () {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function pick(rng, arr) {
+  return arr[Math.floor(rng() * arr.length)];
+}
+
+function generateTherapists(count) {
+  const generated = [];
+  for (let i = 0; i < count; i++) {
+    const seed = 1000 + i;
+    const rng = mulberry32(seed);
+    const isFemale = rng() > 0.5;
+    const firstName = pick(rng, isFemale ? FIRST_NAMES_F : FIRST_NAMES_M);
+    const lastName = pick(rng, LAST_NAMES);
+    const name = `${lastName} ${firstName}`;
+    const years = Math.floor(rng() * 18) + 1;
+    const title = years <= 2 ? pick(rng, ["Pszichológus jelölt", "Pszichológus, szupervízió alatt"]) : pick(rng, TITLES);
+    const price = (Math.floor(rng() * 13) + 8) * 1000;
+    const rating = Math.round((4.4 + rng() * 0.6) * 10) / 10;
+    const reviewCount = Math.floor(rng() * 45) + 3;
+    const numTags = Math.floor(rng() * 2) + 2;
+    const tags = [];
+    // Guarantee exactly 8 generated therapists work with "Kapcsolatok" (i indices 0-7).
+    // Combined with the 2 hand-written profiles that already have it
+    // (Kovács Anna, Tóth Gabriella), this gives exactly 10 total.
+    if (i < 8) tags.push("Kapcsolatok");
+    const topicPool = TOPICS.filter((t) => t !== "Kapcsolatok");
+    for (let j = 0; j < numTags; j++) {
+      const t = pick(rng, topicPool);
+      if (!tags.includes(t)) tags.push(t);
+    }
+    const isOnline = rng() > 0.3;
+    const isInPerson = rng() > 0.15;
+    const locations = [];
+    if (isInPerson) locations.push(`Budapest, ${pick(rng, NEIGHBORHOODS)}`);
+    if (isOnline) locations.push("Online");
+    if (locations.length === 0) locations.push("Online");
+    const initials = (lastName[0] + firstName[0]).toUpperCase();
+    const color = pick(rng, COLOR_POOL);
+    generated.push({
+      id: 100 + i,
+      name,
+      title,
+      years,
+      price,
+      rating,
+      reviewCount,
+      locations,
+      languages: pick(rng, LANG_SETS),
+      tags,
+      bio: `Azokkal dolgozom szívesen, akik szeretnének változást elérni az életükben. Fontos számomra a biztonságos, ítélkezésmentes tér, ahol őszintén lehet beszélni a nehéz dolgokról is.`,
+      spectrum: {
+        supportive: Math.floor(rng() * 5) + 1,
+        structured: Math.floor(rng() * 5) + 1,
+        direct: Math.floor(rng() * 5) + 1,
+        experienced: Math.min(5, Math.max(1, Math.floor(years / 3) + 1)),
+      },
+      videoColor: color,
+      avatarColor: color,
+      initials,
+      availability: genSlots(seed),
+    });
+  }
+  return generated;
+}
+
+const THERAPISTS = [...BASE_THERAPISTS, ...generateTherapists(94)];
+
+function formatDate(d) {
+  return d.toLocaleDateString("hu-HU", { month: "short", day: "numeric", weekday: "short" });
+}
+
+function formatPrice(p) {
+  return p.toLocaleString("hu-HU") + " Ft";
+}
+
+// ---------------------- shared UI bits ----------------------
+
+function Logo({ onClick }) {
+  return (
+    <div onClick={onClick} style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#ECE8DD", cursor: "pointer", letterSpacing: "-0.5px" }}>
+      illik
+    </div>
+  );
+}
+
+function SpectrumBar({ leftLabel, rightLabel, value, max = 5 }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+      <div
+        style={{
+          background: "#A8C97A",
+          color: "#33421c",
+          fontSize: 12.5,
+          fontWeight: 500,
+          padding: "10px 14px",
+          borderRadius: 3,
+          minWidth: 84,
+          textAlign: "center",
+          boxShadow: "1px 2px 4px rgba(0,0,0,0.25)",
+        }}
+      >
+        {leftLabel}
+      </div>
+      <div style={{ flex: 1, display: "flex", justifyContent: "center", gap: 7 }}>
+        {Array.from({ length: max }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              width: 11,
+              height: 11,
+              borderRadius: "50%",
+              background: i < value ? "#A8C97A" : "#E8A467",
+              opacity: i < value ? 1 - i * 0.12 : 1 - (max - 1 - i) * 0.12,
+            }}
+          />
+        ))}
+      </div>
+      <div
+        style={{
+          background: "#E8A467",
+          color: "#5c3613",
+          fontSize: 12.5,
+          fontWeight: 500,
+          padding: "10px 14px",
+          borderRadius: 3,
+          minWidth: 84,
+          textAlign: "center",
+          boxShadow: "1px 2px 4px rgba(0,0,0,0.25)",
+        }}
+      >
+        {rightLabel}
+      </div>
+    </div>
+  );
+}
+
+function ExperienceRow({ value, max = 5 }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      <div
+        style={{
+          background: "#A8C97A",
+          color: "#33421c",
+          fontSize: 12.5,
+          fontWeight: 500,
+          padding: "10px 14px",
+          borderRadius: 3,
+          minWidth: 84,
+          textAlign: "center",
+          boxShadow: "1px 2px 4px rgba(0,0,0,0.25)",
+        }}
+      >
+        tapasztalat
+      </div>
+      <div style={{ flex: 1, display: "flex", justifyContent: "center", gap: 7 }}>
+        {Array.from({ length: max }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              width: 11,
+              height: 11,
+              borderRadius: "50%",
+              background: i < value ? "#A8C97A" : "#3a3a37",
+              opacity: i < value ? 1 - i * 0.12 : 1,
+            }}
+          />
+        ))}
+      </div>
+      <div style={{ minWidth: 84 }} />
+    </div>
+  );
+}
+
+function ExperienceDots({ value, max = 5 }) {
+  return (
+    <div style={{ display: "flex", gap: 4 }}>
+      {Array.from({ length: max }).map((_, i) => (
+        <div
+          key={i}
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            background: i < value ? "#76875A" : "#2a2a28",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Avatar({ color, initials, size = 44 }) {
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background: color,
+        color: "#1a1a18",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: 600,
+        fontSize: size * 0.32,
+        flexShrink: 0,
+      }}
+    >
+      {initials}
+    </div>
+  );
+}
+
+function VideoThumb({ color, duration = "1:02", onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        background: color,
+        aspectRatio: "16 / 9",
+        width: "100%",
+        borderRadius: 12,
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        flexShrink: 0,
+      }}
+    >
+      <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(20,20,18,0.55)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Play size={18} color="#fff" style={{ marginLeft: 2 }} fill="#fff" />
+      </div>
+      <div style={{ position: "absolute", bottom: 8, right: 10, fontSize: 11, fontWeight: 500, background: "rgba(0,0,0,0.5)", color: "#fff", padding: "2px 7px", borderRadius: 5 }}>
+        {duration}
+      </div>
+    </div>
+  );
+}
+
+// Pool of Unsplash Source queries for generated therapists — varied but
+// consistently warm/professional. Seed is used to pick consistently per therapist.
+const GITHUB_PORTRAITS = [
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a01.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a02.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a03.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a04.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a05.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a06.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a07.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a08.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a09.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b01.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b02.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b03.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b04.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b05.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b06.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b07.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b08.jpg",
+  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b09.jpg",
+];
+
+function BrowseThumb({ imageUrl, seed = 0, color, onClick }) {
+  const src = imageUrl || GITHUB_PORTRAITS[seed % GITHUB_PORTRAITS.length];
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        aspectRatio: "16 / 9",
+        width: "100%",
+        borderRadius: 12,
+        position: "relative",
+        cursor: "pointer",
+        flexShrink: 0,
+        overflow: "hidden",
+        background: color,
+      }}
+    >
+      <img
+        src={src}
+        alt=""
+        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        onError={(e) => { e.target.style.display = "none"; }}
+      />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.35) 100%)" }} />
+      <div
+        style={{
+          position: "absolute",
+          left: 10,
+          bottom: 10,
+          width: 26,
+          height: 26,
+          borderRadius: "50%",
+          background: "rgba(20,20,18,0.6)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Play size={11} color="#fff" style={{ marginLeft: 1 }} fill="#fff" />
+      </div>
+    </div>
+  );
+}
+
+function Pill({ children, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        fontSize: 12.5,
+        padding: "6px 13px",
+        borderRadius: 20,
+        border: active ? "0.5px solid #5DCAA5" : "0.5px solid #2e2e2b",
+        background: active ? "#3A4530" : "transparent",
+        color: active ? "#76875A" : "#9a978c",
+        cursor: "pointer",
+        whiteSpace: "nowrap",
+        fontWeight: active ? 500 : 400,
+        transition: "all 0.15s",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function PrimaryButton({ children, onClick, style, disabled }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        background: disabled ? "#3a3a37" : "#76875A",
+        color: disabled ? "#7a7a76" : "#ffffff",
+        border: "none",
+        borderRadius: 10,
+        padding: "12px 20px",
+        fontSize: 14,
+        fontWeight: 600,
+        cursor: disabled ? "default" : "pointer",
+        ...style,
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function SecondaryButton({ children, onClick, style }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        background: "transparent",
+        color: "#ECE8DD",
+        border: "0.5px solid #3a3a37",
+        borderRadius: 10,
+        padding: "12px 20px",
+        fontSize: 14,
+        fontWeight: 500,
+        cursor: "pointer",
+        ...style,
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ---------------------- 2. PATIENT VIEWS ----------------------
+
+function NavBar({ onLogoClick, onLoginClick, onTherapistAreaClick, role, onLogout }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 28px", borderBottom: "0.5px solid #232320" }}>
+      <Logo onClick={onLogoClick} />
+      <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+        <span style={{ fontSize: 13, color: "#9a978c", cursor: "pointer" }} onClick={onTherapistAreaClick}>
+          Pszichológusoknak
+        </span>
+        {role ? (
+          <button onClick={onLogout} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#9a978c", background: "transparent", border: "none", cursor: "pointer" }}>
+            Kijelentkezés
+          </button>
+        ) : (
+          <button
+            onClick={onLoginClick}
+            style={{ fontSize: 13, fontWeight: 600, color: "#ffffff", background: "#76875A", border: "none", borderRadius: 8, padding: "8px 16px", cursor: "pointer" }}
+          >
+            Bejelentkezés
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LandingView({ filters, setFilters, onSearch }) {
+  return (
+    <div style={{ minHeight: "70vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 24px", textAlign: "center" }}>
+      <h1 style={{ fontFamily: "Georgia, serif", fontSize: 36, color: "#ECE8DD", maxWidth: 560, lineHeight: 1.25, marginBottom: 14, fontWeight: 400 }}>
+        Találj pszichológust, akivel igazán megtalálod a közös hangot
+      </h1>
+      <p style={{ fontSize: 15, color: "#9a978c", maxWidth: 440, marginBottom: 36, lineHeight: 1.6 }}>
+        Nézz bemutató videókat és érezd meg, ki illik legjobban hozzád.
+      </p>
+
+      <div style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 18, textAlign: "left" }}>
+        <div>
+          <div style={{ fontSize: 13, color: "#9a978c", marginBottom: 8 }}>Helyszín</div>
+          <MoodSelect
+            value={filters.location}
+            onChange={(v) => setFilters({ ...filters, location: v })}
+            options={["Budapest", "Online"]}
+          />
+        </div>
+
+        <div>
+          <div style={{ fontSize: 13, color: "#9a978c", marginBottom: 8 }}>Miről szeretnél beszélni?</div>
+          <MoodSelect
+            value={filters.topic}
+            onChange={(v) => setFilters({ ...filters, topic: v })}
+            placeholder="Válassz témát"
+            options={TOPICS}
+            searchable
+          />
+        </div>
+
+        <PrimaryButton onClick={onSearch} style={{ padding: "14px 20px", fontSize: 15, marginTop: 8 }}>
+          Pszichológusok felfedezése
+        </PrimaryButton>
+      </div>
+
+      <div style={{ display: "flex", gap: 40, marginTop: 40, flexWrap: "wrap", justifyContent: "center", opacity: 0.75 }}>
+        <ValueProp icon={} title="Nézz videókat" desc="Ismerd meg a szakemberek stílusát és szemléletét." />
+        <ValueProp icon={<Heart size={16} />} title="Érezd a kapcsolatot" desc="Válaszd azt, akivel szívesen beszélnél a legnehezebb dolgokról is." />
+        <ValueProp icon={<CalendarIcon size={16} />} title="Foglalj egyszerűen" desc="Időpontfoglalás, emlékeztető és minden egy helyen." />
+      </div>
+    </div>
+  );
+}
+
+function MoodSelect({ value, onChange, options, icon, placeholder, searchable }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const containerRef = React.useRef(null);
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    function handleClickOutside(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+        setQuery("");
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  const filteredOptions = searchable && query ? options.filter((o) => o.toLowerCase().startsWith(query.toLowerCase())) : options;
+
+  const openSelect = () => {
+    setOpen(true);
+    setQuery("");
+    if (searchable) setTimeout(() => inputRef.current && inputRef.current.focus(), 0);
+  };
+
+  return (
+    <div ref={containerRef} style={{ position: "relative" }}>
+      {searchable && open ? (
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "13px 16px",
+            borderRadius: 10,
+            border: "0.5px solid #6b7d5e",
+            background: "#15160f",
+          }}
+        >
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={value || placeholder}
+            style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: "#ECE8DD", fontSize: 14.5, padding: 0 }}
+          />
+        </div>
+      ) : (
+        <button
+          onClick={openSelect}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "13px 16px",
+            borderRadius: 10,
+            border: "0.5px solid #2a2a26",
+            background: "#15160f",
+            color: value ? "#ECE8DD" : "#7a786f",
+            fontSize: 14.5,
+            cursor: "pointer",
+          }}
+        >
+          <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {value || placeholder}
+          </span>
+          <span style={{ color: "#6b6a62", fontSize: 10 }}>▼</span>
+        </button>
+      )}
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            top: "calc(100% + 6px)",
+            left: 0,
+            right: 0,
+            background: "#15160f",
+            border: "0.5px solid #2a2a26",
+            borderRadius: 10,
+            padding: 6,
+            maxHeight: 280,
+            overflowY: "auto",
+            zIndex: 10,
+          }}
+        >
+          {filteredOptions.length === 0 && <div style={{ padding: "10px 12px", fontSize: 13, color: "#6a6862" }}>Nincs egyező téma</div>}
+          {filteredOptions.map((opt) => (
+            <div
+              key={opt}
+              onClick={() => {
+                onChange(opt);
+                setOpen(false);
+                setQuery("");
+              }}
+              style={{
+                padding: "10px 12px",
+                borderRadius: 7,
+                fontSize: 14,
+                color: value === opt ? "#cfd9b8" : "#d4d2c8",
+                background: value === opt ? "#2a3324" : "transparent",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "#202117")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = value === opt ? "#2a3324" : "transparent")}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ValueProp({ icon, title, desc }) {
+  return (
+    <div style={{ maxWidth: 175, textAlign: "center" }}>
+      <div style={{ color: "#7a786f", marginBottom: 7, display: "flex", justifyContent: "center" }}>{icon}</div>
+      <div style={{ fontSize: 12.5, fontWeight: 600, color: "#9a978c", marginBottom: 4 }}>{title}</div>
+      <div style={{ fontSize: 11, color: "#6a6862", lineHeight: 1.45 }}>{desc}</div>
+    </div>
+  );
+}
+
+function ChipOption({ children, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        fontSize: 14,
+        padding: "10px 18px",
+        borderRadius: 24,
+        border: active ? "1.5px solid #6b7d5e" : "1.5px solid #2e2e2b",
+        background: active ? "#3d4a32" : "transparent",
+        color: active ? "#ECE8DD" : "#d4d2c8",
+        cursor: "pointer",
+        fontWeight: active ? 600 : 400,
+        transition: "all 0.15s",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+const selectStyle = {
+  flex: 1,
+  minWidth: 180,
+  padding: "13px 14px",
+  borderRadius: 10,
+  border: "0.5px solid #2e2e2b",
+  background: "#181816",
+  color: "#ECE8DD",
+  fontSize: 14,
+};
+
+function ResultsView({ filters, setFilters, savedIds, toggleSave, onSelectTherapist }) {
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filtered = THERAPISTS.filter((t) => {
+    if (filters.topic && !t.tags.includes(filters.topic)) return false;
+    if (filters.location === "Online" && !t.locations.includes("Online")) return false;
+    if (filters.maxPrice && t.price > filters.maxPrice) return false;
+    return true;
+  });
+
+  return (
+    <div style={{ padding: "20px 28px 60px", maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+        <div>
+          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#ECE8DD", fontWeight: 400, marginBottom: 4 }}>Pszichológusok</h1>
+          <div style={{ fontSize: 13, color: "#6a6862" }}>{filtered.length} találat</div>
+        </div>
+        <button
+          onClick={() => setFiltersOpen(!filtersOpen)}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            background: filtersOpen ? "#1d1e16" : "transparent",
+            border: "0.5px solid #2e2e2b",
+            color: "#d4d2c8",
+            borderRadius: 20,
+            padding: "9px 16px",
+            fontSize: 13,
+            cursor: "pointer",
+          }}
+        >
+          <Settings size={14} /> Szűrés
+        </button>
+      </div>
+
+      {filtersOpen && (
+        <div style={{ display: "flex", gap: 28, flexWrap: "wrap", background: "#121211", border: "0.5px solid #232320", borderRadius: 14, padding: 18, marginTop: 16, marginBottom: 8 }}>
+          <div>
+            <FilterLabel>Téma</FilterLabel>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", maxWidth: 420 }}>
+              {TOPICS.slice(0, 8).map((t) => (
+                <Pill key={t} active={filters.topic === t} onClick={() => setFilters({ ...filters, topic: filters.topic === t ? "" : t })}>
+                  {t}
+                </Pill>
+              ))}
+            </div>
+          </div>
+          <div>
+            <FilterLabel>Helyszín</FilterLabel>
+            <div style={{ display: "flex", gap: 6 }}>
+              <Pill active={filters.location === "Budapest (összes)"} onClick={() => setFilters({ ...filters, location: "Budapest (összes)" })}>
+                Budapest
+              </Pill>
+              <Pill active={filters.location === "Online"} onClick={() => setFilters({ ...filters, location: "Online" })}>
+                Online
+              </Pill>
+            </div>
+          </div>
+          <div style={{ minWidth: 160 }}>
+            <FilterLabel>Max. ár / alkalom</FilterLabel>
+            <input
+              type="range"
+              min={8000}
+              max={30000}
+              step={1000}
+              value={filters.maxPrice || 30000}
+              onChange={(e) => setFilters({ ...filters, maxPrice: parseInt(e.target.value) })}
+              style={{ width: "100%", accentColor: "#76875A" }}
+            />
+            <div style={{ fontSize: 12, color: "#8a877d", marginTop: 4 }}>max {formatPrice(filters.maxPrice || 30000)}</div>
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginTop: 22 }}>
+        {filtered.map((t) => (
+          <div
+            key={t.id}
+            style={{ background: "#151513", border: "0.5px solid #232320", borderRadius: 14, overflow: "hidden", cursor: "pointer", display: "flex", flexDirection: "column" }}
+            onClick={() => onSelectTherapist(t)}
+          >
+            <div style={{ position: "relative" }}>
+              <BrowseThumb color={t.videoColor} seed={t.id} imageUrl={t.imageUrl} />
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleSave(t.id); }}
+                style={{ position: "absolute", top: 10, right: 10, background: "rgba(20,20,18,0.5)", border: "none", borderRadius: "50%", width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+              >
+                <Heart size={14} color={savedIds.includes(t.id) ? "#E89A8A" : "#fff"} fill={savedIds.includes(t.id) ? "#E89A8A" : "none"} />
+              </button>
+            </div>
+            <div style={{ padding: "14px 16px 16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "#ECE8DD" }}>{t.name}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0, marginLeft: 10, width: 36, justifyContent: "flex-end" }}>
+                  <Star size={11} fill="#E8D5A8" color="#E8D5A8" />
+                  <span style={{ fontSize: 12, color: "#9a978c" }}>{t.rating.toFixed(1)}</span>
+                </div>
+              </div>
+              <div style={{
+                fontSize: 12,
+                color: "#8a877d",
+                lineHeight: 1.5,
+                minHeight: "2.25em",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}>{t.tags.slice(0, 3).join(", ")}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SpectrumRow({ leftLabel, rightLabel, value, max = 5 }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div style={{ fontSize: 11.5, color: "#9a978c", width: 56, flexShrink: 0 }}>{leftLabel}</div>
+      <div style={{ display: "flex", gap: 5, flex: 1, justifyContent: "center" }}>
+        {Array.from({ length: max }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              width: 9,
+              height: 9,
+              borderRadius: "50%",
+              background: i === value - 1 ? "#76875A" : "transparent",
+              border: i === value - 1 ? "none" : "1px solid #4a4944",
+            }}
+          />
+        ))}
+      </div>
+      <div style={{ fontSize: 11.5, color: "#9a978c", width: 56, flexShrink: 0, textAlign: "right" }}>{rightLabel}</div>
+    </div>
+  );
+}
+
+function SingleScaleRow({ label, value, max = 5 }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div style={{ fontSize: 11.5, color: "#9a978c", width: 56, flexShrink: 0 }}>{label}</div>
+      <div style={{ display: "flex", gap: 5, flex: 1, justifyContent: "center" }}>
+        {Array.from({ length: max }).map((_, i) => (
+          <div key={i} style={{ width: 9, height: 9, borderRadius: "50%", background: i < value ? "#76875A" : "#2a2a28" }} />
+        ))}
+      </div>
+      <div style={{ width: 56, flexShrink: 0 }} />
+    </div>
+  );
+}
+
+function MiniSpectrum({ label, value, max = 5 }) {
+  return (
+    <div>
+      <div style={{ fontSize: 10, color: "#8a877d", marginBottom: 3, textAlign: "center" }}>{label}</div>
+      <div style={{ display: "flex", gap: 3, justifyContent: "center" }}>
+        {Array.from({ length: max }).map((_, i) => (
+          <div key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: i < value ? "#76875A" : "#2a2a28" }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MiniSpectrumInline({ label, value, max = 5 }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 7, justifyContent: "flex-end" }}>
+      <div style={{ fontSize: 10, color: "#8a877d", whiteSpace: "nowrap" }}>{label}</div>
+      <div style={{ display: "flex", gap: 3 }}>
+        {Array.from({ length: max }).map((_, i) => (
+          <div key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: i < value ? "#76875A" : "#2a2a28" }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FilterLabel({ children }) {
+  return <div style={{ fontSize: 10.5, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "#6a6862", marginBottom: 10 }}>{children}</div>;
+}
+
+function ProfileView({ therapist, onBack, onBook, savedIds, toggleSave }) {
+  if (!therapist) return null;
+  return (
+    <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 24px 60px" }}>
+      <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "transparent", border: "none", color: "#9a978c", fontSize: 13, cursor: "pointer", marginBottom: 16 }}>
+        ← Vissza a találatokhoz
+      </button>
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13.5, color: "#d4d2c8" }}>
+          <Star size={14} fill="#E8D5A8" color="#E8D5A8" /> {therapist.rating} ({therapist.reviewCount} értékelés)
+        </div>
+      </div>
+
+      <div style={{ position: "relative", marginBottom: 20 }}>
+        <VideoThumb color={therapist.videoColor} duration="1:02" />
+        <button
+          onClick={() => toggleSave(therapist.id)}
+          style={{ position: "absolute", top: 14, right: 14, background: "rgba(20,20,18,0.6)", border: "none", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
+        >
+          <Heart size={17} color={savedIds.includes(therapist.id) ? "#E89A8A" : "#fff"} fill={savedIds.includes(therapist.id) ? "#E89A8A" : "none"} />
+        </button>
+      </div>
+
+      <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, color: "#ECE8DD", marginBottom: 4, fontWeight: 400 }}>{therapist.name}</h1>
+      <div style={{ fontSize: 14, color: "#9a978c", marginBottom: 16 }}>{therapist.title}</div>
+
+      <div style={{ background: "#1d1e16", border: "0.5px solid #232320", borderRadius: 12, padding: "20px 16px", marginBottom: 18 }}>
+        <SpectrumBar leftLabel="támogató" rightLabel="konfrontatív" value={therapist.spectrum.supportive} />
+        <SpectrumBar leftLabel="strukturált" rightLabel="intuitív" value={therapist.spectrum.structured} />
+        <SpectrumBar leftLabel="közvetlen" rightLabel="formális" value={therapist.spectrum.direct} />
+        <ExperienceRow value={therapist.spectrum.experienced} />
+      </div>
+
+      <div style={{ marginBottom: 18, fontSize: 13.5, color: "#d4d2c8" }}>
+        <span>Értékelhető 3. alkalom után</span>
+      </div>
+
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
+        {therapist.tags.map((tag) => (
+          <span key={tag} style={{ fontSize: 11.5, padding: "4px 10px", borderRadius: 20, background: "#1f1f1c", color: "#9a978c" }}>
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <h3 style={{ fontSize: 14, color: "#ECE8DD", marginBottom: 8, fontWeight: 600 }}>Rólam</h3>
+      <p style={{ fontSize: 14, color: "#b5b2a8", lineHeight: 1.6, marginBottom: 22 }}>{therapist.bio}</p>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 24, padding: 16, background: "#151513", border: "0.5px solid #232320", borderRadius: 12 }}>
+        <InfoBlock icon={<MapPin size={15} />} label="Helyszín" value={therapist.locations.join(", ")} />
+        <InfoBlock icon={<Clock size={15} />} label="Ár" value={`${formatPrice(therapist.price)} / alkalom`} />
+        <InfoBlock icon={<Globe size={15} />} label="Nyelvek" value={therapist.languages.join(", ")} />
+      </div>
+
+      <PrimaryButton onClick={() => onBook(therapist)} style={{ width: "100%", padding: "14px", fontSize: 15 }}>
+        Időpont foglalása
+      </PrimaryButton>
+    </div>
+  );
+}
+
+function InfoBlock({ icon, label, value }) {
+  return (
+    <div>
+      <div style={{ color: "#8a877d", marginBottom: 6 }}>{icon}</div>
+      <div style={{ fontSize: 11, color: "#6a6862", marginBottom: 2 }}>{label}</div>
+      <div style={{ fontSize: 13, color: "#d4d2c8" }}>{value}</div>
+    </div>
+  );
+}
+
+function BookingView({ therapist, onBack, onConfirm, isLoggedIn, onRequireLogin }) {
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [confirmed, setConfirmed] = useState(false);
+  const [joinedWaitlist, setJoinedWaitlist] = useState(false);
+
+  const hasAnySlots = therapist.availability.some((d) => d.slots.length > 0);
+
+  if (confirmed) {
+    return (
+      <div style={{ maxWidth: 480, margin: "100px auto", padding: 24, textAlign: "center" }}>
+        <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#3A4530", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+          <Check size={26} color="#76875A" />
+        </div>
+        <h2 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#ECE8DD", marginBottom: 8, fontWeight: 400 }}>Foglalás megerősítve</h2>
+        <p style={{ fontSize: 14, color: "#9a978c", marginBottom: 24, lineHeight: 1.6 }}>
+          {therapist.name} — {selectedDay && formatDate(selectedDay.date)}, {selectedSlot}
+        </p>
+        <SecondaryButton onClick={onBack}>Vissza a profilhoz</SecondaryButton>
+      </div>
+    );
+  }
+
+  if (joinedWaitlist) {
+    return (
+      <div style={{ maxWidth: 480, margin: "100px auto", padding: 24, textAlign: "center" }}>
+        <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#2e2a1c", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+          <Clock size={26} color="#E8D5A8" />
+        </div>
+        <h2 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#ECE8DD", marginBottom: 8, fontWeight: 400 }}>Felkerültél a várólistára</h2>
+        <p style={{ fontSize: 14, color: "#9a978c", marginBottom: 24, lineHeight: 1.6 }}>
+          Értesítünk, amint {therapist.name} naptárában szabad hely nyílik.
+        </p>
+        <SecondaryButton onClick={onBack}>Vissza a profilhoz</SecondaryButton>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ maxWidth: 600, margin: "0 auto", padding: "24px 24px 60px" }}>
+      <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "transparent", border: "none", color: "#9a978c", fontSize: 13, cursor: "pointer", marginBottom: 20 }}>
+        ← Vissza
+      </button>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+        <Avatar color={therapist.avatarColor} initials={therapist.initials} size={48} />
+        <div>
+          <div style={{ fontSize: 16, fontWeight: 600, color: "#ECE8DD" }}>{therapist.name}</div>
+          <div style={{ fontSize: 12.5, color: "#8a877d" }}>{formatPrice(therapist.price)} / alkalom</div>
+        </div>
+      </div>
+
+      {!hasAnySlots ? (
+        <div style={{ background: "#151513", border: "0.5px solid #232320", borderRadius: 12, padding: 24, textAlign: "center" }}>
+          <p style={{ fontSize: 14, color: "#d4d2c8", marginBottom: 16 }}>
+            {therapist.name} naptárában jelenleg nincs szabad időpont a következő két hétben.
+          </p>
+          <PrimaryButton onClick={() => setJoinedWaitlist(true)}>Várólistára kerülés</PrimaryButton>
+        </div>
+      ) : (
+        <>
+          <FilterLabel>Válassz napot</FilterLabel>
+          <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8, marginBottom: 20 }}>
+            {therapist.availability.map((d, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setSelectedDay(d);
+                  setSelectedSlot(null);
+                }}
+                disabled={d.slots.length === 0}
+                style={{
+                  minWidth: 64,
+                  padding: "10px 8px",
+                  borderRadius: 10,
+                  border: selectedDay === d ? "1.5px solid #76875A" : "0.5px solid #2e2e2b",
+                  background: d.slots.length === 0 ? "#121210" : selectedDay === d ? "#3A4530" : "#181816",
+                  color: d.slots.length === 0 ? "#4a4944" : selectedDay === d ? "#76875A" : "#d4d2c8",
+                  cursor: d.slots.length === 0 ? "default" : "pointer",
+                  flexShrink: 0,
+                  fontSize: 11.5,
+                  textAlign: "center",
+                }}
+              >
+                {formatDate(d.date)}
+              </button>
+            ))}
+          </div>
+
+          {selectedDay && (
+            <>
+              <FilterLabel>Válassz időpontot</FilterLabel>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 28 }}>
+                {selectedDay.slots.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSelectedSlot(s)}
+                    style={{
+                      padding: "10px 18px",
+                      borderRadius: 10,
+                      border: selectedSlot === s ? "1.5px solid #76875A" : "0.5px solid #2e2e2b",
+                      background: selectedSlot === s ? "#3A4530" : "#181816",
+                      color: selectedSlot === s ? "#76875A" : "#d4d2c8",
+                      cursor: "pointer",
+                      fontSize: 13.5,
+                    }}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+
+          <PrimaryButton
+            disabled={!selectedSlot}
+            onClick={() => {
+              if (!isLoggedIn) {
+                onRequireLogin();
+                return;
+              }
+              setConfirmed(true);
+            }}
+            style={{ width: "100%", padding: 14 }}
+          >
+            {selectedSlot ? `Foglalás megerősítése — ${formatPrice(therapist.price)}` : "Válassz időpontot"}
+          </PrimaryButton>
+        </>
+      )}
+    </div>
+  );
+}
+
+function AuthView({ onComplete, onBack, role = "patient" }) {
+  const [mode, setMode] = useState("register");
+  return (
+    <div style={{ maxWidth: 380, margin: "60px auto", padding: 24 }}>
+      <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "transparent", border: "none", color: "#9a978c", fontSize: 13, cursor: "pointer", marginBottom: 24 }}>
+        ← Vissza
+      </button>
+      <h2 style={{ fontFamily: "Georgia, serif", fontSize: 24, color: "#ECE8DD", marginBottom: 6, fontWeight: 400 }}>
+        {role === "therapist" ? "Pszichológus belépés" : mode === "register" ? "Fiók létrehozása" : "Bejelentkezés"}
+      </h2>
+      <p style={{ fontSize: 13, color: "#8a877d", marginBottom: 24 }}>
+        {role === "therapist" ? "Lépj be a saját irányítópultodba" : "Csak egy percet vesz igénybe"}
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
+        <input placeholder="Email cím" style={inputStyle} />
+        <input placeholder="Jelszó" type="password" style={inputStyle} />
+        {mode === "register" && role !== "therapist" && <input placeholder="Teljes név" style={inputStyle} />}
+      </div>
+
+      <PrimaryButton onClick={onComplete} style={{ width: "100%", padding: 13 }}>
+        {role === "therapist" ? "Belépés" : mode === "register" ? "Fiók létrehozása" : "Bejelentkezés"}
+      </PrimaryButton>
+
+      {role !== "therapist" && (
+        <p style={{ fontSize: 12.5, color: "#8a877d", textAlign: "center", marginTop: 16 }}>
+          {mode === "register" ? "Már van fiókod? " : "Még nincs fiókod? "}
+          <span style={{ color: "#76875A", cursor: "pointer" }} onClick={() => setMode(mode === "register" ? "login" : "register")}>
+            {mode === "register" ? "Bejelentkezés" : "Regisztráció"}
+          </span>
+        </p>
+      )}
+    </div>
+  );
+}
+
+const inputStyle = {
+  padding: "12px 14px",
+  borderRadius: 10,
+  border: "0.5px solid #2e2e2b",
+  background: "#181816",
+  color: "#ECE8DD",
+  fontSize: 14,
+};
+
+// ---------------------- 3. THERAPIST VIEWS ----------------------
+
+function TherapistDashboard({ therapist, onLogout, mockBookings }) {
+  const [tab, setTab] = useState("profile");
+  const [editTherapist, setEditTherapist] = useState({ ...therapist });
+  const [savedMsg, setSavedMsg] = useState(false);
+
+  const save = () => {
+    setSavedMsg(true);
+    setTimeout(() => setSavedMsg(false), 2000);
+  };
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", minHeight: "75vh" }}>
+      <div style={{ borderRight: "0.5px solid #232320", padding: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
+          <Avatar color={therapist.avatarColor} initials={therapist.initials} size={36} />
+          <div style={{ fontSize: 13.5, color: "#ECE8DD", fontWeight: 600 }}>{therapist.name}</div>
+        </div>
+        <SideTab icon={<User size={15} />} label="Profil" active={tab === "profile"} onClick={() => setTab("profile")} />
+        <SideTab icon={<CalendarIcon size={15} />} label="Foglalások" active={tab === "bookings"} onClick={() => setTab("bookings")} />
+        <SideTab icon={<Settings size={15} />} label="Elérhetőség" active={tab === "availability"} onClick={() => setTab("availability")} />
+        <div style={{ marginTop: 24, paddingTop: 16, borderTop: "0.5px solid #232320" }}>
+          <SideTab icon={<LogOut size={15} />} label="Kijelentkezés" onClick={onLogout} />
+        </div>
+      </div>
+
+      <div style={{ padding: 28, maxWidth: 640 }}>
+        {tab === "profile" && (
+          <>
+            <h2 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#ECE8DD", marginBottom: 20, fontWeight: 400 }}>Profil szerkesztése</h2>
+
+            <div style={{ marginBottom: 20 }}>
+              <FilterLabel>Bemutatkozó videó</FilterLabel>
+              <VideoThumb color={editTherapist.videoColor} />
+              <button style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 10, background: "transparent", border: "0.5px solid #2e2e2b", color: "#9a978c", borderRadius: 8, padding: "8px 14px", fontSize: 12.5, cursor: "pointer" }}>
+                ▶ Új videó feltöltése
+              </button>
+            </div>
+
+            <FilterLabel>Bemutatkozás</FilterLabel>
+            <textarea
+              value={editTherapist.bio}
+              onChange={(e) => setEditTherapist({ ...editTherapist, bio: e.target.value })}
+              style={{ ...inputStyle, width: "100%", minHeight: 100, marginBottom: 18, resize: "vertical", fontFamily: "inherit" }}
+            />
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
+              <div>
+                <FilterLabel>Ár / alkalom</FilterLabel>
+                <input
+                  type="number"
+                  value={editTherapist.price}
+                  onChange={(e) => setEditTherapist({ ...editTherapist, price: parseInt(e.target.value) || 0 })}
+                  style={{ ...inputStyle, width: "100%" }}
+                />
+              </div>
+              <div>
+                <FilterLabel>Tapasztalat (év)</FilterLabel>
+                <input
+                  type="number"
+                  value={editTherapist.years}
+                  onChange={(e) => setEditTherapist({ ...editTherapist, years: parseInt(e.target.value) || 0 })}
+                  style={{ ...inputStyle, width: "100%" }}
+                />
+              </div>
+            </div>
+
+            <FilterLabel>Témák</FilterLabel>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 24 }}>
+              {TOPICS.map((t) => {
+                const active = editTherapist.tags.includes(t);
+                return (
+                  <Pill
+                    key={t}
+                    active={active}
+                    onClick={() =>
+                      setEditTherapist({
+                        ...editTherapist,
+                        tags: active ? editTherapist.tags.filter((x) => x !== t) : [...editTherapist.tags, t],
+                      })
+                    }
+                  >
+                    {t}
+                  </Pill>
+                );
+              })}
+            </div>
+
+            <PrimaryButton onClick={save}>{savedMsg ? "Mentve ✓" : "Változások mentése"}</PrimaryButton>
+          </>
+        )}
+
+        {tab === "bookings" && (
+          <>
+            <h2 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#ECE8DD", marginBottom: 20, fontWeight: 400 }}>Foglalások</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {mockBookings.map((b, i) => (
+                <div key={i} style={{ background: "#151513", border: "0.5px solid #232320", borderRadius: 10, padding: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <div style={{ fontSize: 14, color: "#ECE8DD", fontWeight: 500 }}>{b.patient}</div>
+                    <div style={{ fontSize: 12.5, color: "#8a877d" }}>
+                      {b.date} · {b.time}
+                    </div>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      padding: "4px 10px",
+                      borderRadius: 20,
+                      background: b.status === "Megerősítve" ? "#3A4530" : "#2e2a1c",
+                      color: b.status === "Megerősítve" ? "#76875A" : "#E8D5A8",
+                    }}
+                  >
+                    {b.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {tab === "availability" && (
+          <>
+            <h2 style={{ fontFamily: "Georgia, serif", fontSize: 22, color: "#ECE8DD", marginBottom: 8, fontWeight: 400 }}>Elérhetőség kezelése</h2>
+            <p style={{ fontSize: 13, color: "#8a877d", marginBottom: 20 }}>Jelöld be, mely napokon és időpontokban fogadsz pácienseket.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {editTherapist.availability.slice(0, 7).map((d, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#151513", border: "0.5px solid #232320", borderRadius: 10, padding: 12 }}>
+                  <span style={{ fontSize: 13, color: "#d4d2c8", minWidth: 100 }}>{formatDate(d.date)}</span>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {d.slots.length === 0 ? (
+                      <span style={{ fontSize: 12, color: "#5a5852" }}>Nincs megadva</span>
+                    ) : (
+                      d.slots.map((s) => (
+                        <span key={s} style={{ fontSize: 12, padding: "4px 9px", borderRadius: 8, background: "#3A4530", color: "#76875A" }}>
+                          {s}
+                        </span>
+                      ))
+                    )}
+                  </div>
+                  <button style={{ background: "transparent", border: "none", color: "#8a877d", cursor: "pointer" }}>
+                    
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 14, background: "transparent", border: "0.5px dashed #3a3a37", color: "#9a978c", borderRadius: 8, padding: "10px 14px", fontSize: 12.5, cursor: "pointer" }}>
+              + Időpont hozzáadása
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SideTab({ icon, label, active, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "9px 10px",
+        borderRadius: 8,
+        cursor: "pointer",
+        marginBottom: 4,
+        background: active ? "#3A4530" : "transparent",
+        color: active ? "#76875A" : "#9a978c",
+        fontSize: 13,
+      }}
+    >
+      {icon} {label}
+    </div>
+  );
+}
+
+const MOCK_BOOKINGS = [
+  { patient: "Szabó Júlia", date: "Jún 19.", time: "17:00", status: "Megerősítve" },
+  { patient: "Kiss Bence", date: "Jún 20.", time: "10:00", status: "Megerősítve" },
+  { patient: "Németh Réka", date: "Jún 22.", time: "14:00", status: "Várakozik" },
+];
+
+// ---------------------- 4. ROOT APP ----------------------
+
+function IllikApp() {
+  const [view, setView] = useState("landing"); // landing | results | profile | booking | auth | therapist-auth | therapist-dashboard
+  const [filters, setFilters] = useState({ location: "Budapest (összes)", topic: "", maxPrice: 30000 });
+  const [selectedTherapist, setSelectedTherapist] = useState(null);
+  const [savedIds, setSavedIds] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [pendingBookingTherapist, setPendingBookingTherapist] = useState(null);
+  const [therapistLoggedIn, setTherapistLoggedIn] = useState(false);
+
+  const toggleSave = (id) => {
+    setSavedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+
+  return (
+    <div style={{ background: "#0c0c0b", minHeight: "100vh", fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
+      <NavBar
+        onLogoClick={() => setView("landing")}
+        onLoginClick={() => setView("auth")}
+        onTherapistAreaClick={() => setView(therapistLoggedIn ? "therapist-dashboard" : "therapist-auth")}
+        role={isLoggedIn ? "patient" : null}
+        onLogout={() => {
+          setIsLoggedIn(false);
+          setView("landing");
+        }}
+      />
+
+      {view === "landing" && (
+        <LandingView
+          filters={filters}
+          setFilters={setFilters}
+          onSearch={() => setView("results")}
+        />
+      )}
+
+      {view === "results" && (
+        <ResultsView
+          filters={filters}
+          setFilters={setFilters}
+          savedIds={savedIds}
+          toggleSave={toggleSave}
+          onSelectTherapist={(t) => {
+            setSelectedTherapist(t);
+            setView("profile");
+          }}
+        />
+      )}
+
+      {view === "profile" && (
+        <ProfileView
+          therapist={selectedTherapist}
+          onBack={() => setView("results")}
+          onBook={(t) => {
+            setSelectedTherapist(t);
+            setView("booking");
+          }}
+          savedIds={savedIds}
+          toggleSave={toggleSave}
+        />
+      )}
+
+      {view === "booking" && (
+        <BookingView
+          therapist={selectedTherapist}
+          onBack={() => setView("profile")}
+          isLoggedIn={isLoggedIn}
+          onRequireLogin={() => {
+            setPendingBookingTherapist(selectedTherapist);
+            setView("auth");
+          }}
+        />
+      )}
+
+      {view === "auth" && (
+        <AuthView
+          role="patient"
+          onBack={() => setView(pendingBookingTherapist ? "booking" : "landing")}
+          onComplete={() => {
+            setIsLoggedIn(true);
+            setView(pendingBookingTherapist ? "booking" : "landing");
+            setPendingBookingTherapist(null);
+          }}
+        />
+      )}
+
+      {view === "therapist-auth" && (
+        <AuthView
+          role="therapist"
+          onBack={() => setView("landing")}
+          onComplete={() => {
+            setTherapistLoggedIn(true);
+            setView("therapist-dashboard");
+          }}
+        />
+      )}
+
+      {view === "therapist-dashboard" && (
+        <TherapistDashboard
+          therapist={THERAPISTS[0]}
+          mockBookings={MOCK_BOOKINGS}
+          onLogout={() => {
+            setTherapistLoggedIn(false);
+            setView("landing");
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(React.createElement(IllikApp));
   </script>
