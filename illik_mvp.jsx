@@ -41,6 +41,12 @@ const TOPIC_GROUPS = [
   { label: "Személyes növekedés", items: ["Konfliktuskezelés", "Pályaválasztás, karrier"] },
 ];
 
+// 252 cropped portraits in the repo: ai_therapist_001.jpg … ai_therapist_252.jpg
+const PORTRAIT_COUNT = 252;
+const portraitUrl = (n) =>
+  `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${String(n).padStart(3, "0")}.jpg`;
+const GITHUB_PORTRAITS = Array.from({ length: PORTRAIT_COUNT }, (_, i) => portraitUrl(i + 1));
+
 const BASE_THERAPISTS = [
   {
     id: 1,
@@ -58,7 +64,7 @@ const BASE_THERAPISTS = [
     videoColor: "#76875A",
     avatarColor: "#76875A",
     initials: "KA",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a01.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_001.jpg",
     availability: genSlots(1),
   },
   {
@@ -77,7 +83,7 @@ const BASE_THERAPISTS = [
     videoColor: "#CECBF6",
     avatarColor: "#CECBF6",
     initials: "VM",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a02.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_002.jpg",
     availability: genSlots(2),
   },
   {
@@ -96,7 +102,7 @@ const BASE_THERAPISTS = [
     videoColor: "#F5C4B3",
     avatarColor: "#F5C4B3",
     initials: "TG",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a03.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_003.jpg",
     availability: genSlots(3),
   },
   {
@@ -115,7 +121,7 @@ const BASE_THERAPISTS = [
     videoColor: "#E8D5A8",
     avatarColor: "#E8D5A8",
     initials: "SD",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a04.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_004.jpg",
     availability: genSlots(4),
   },
   {
@@ -134,7 +140,7 @@ const BASE_THERAPISTS = [
     videoColor: "#A8C5E8",
     avatarColor: "#A8C5E8",
     initials: "NP",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a05.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_005.jpg",
     availability: genSlots(5),
   },
   {
@@ -153,7 +159,7 @@ const BASE_THERAPISTS = [
     videoColor: "#D4A8C5",
     avatarColor: "#D4A8C5",
     initials: "VM",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a06.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_006.jpg",
     availability: genSlots(6),
   },
 ];
@@ -254,6 +260,8 @@ function generateTherapists(count) {
       videoColor: color,
       avatarColor: color,
       initials,
+      // Portraits 001–006 are taken by BASE_THERAPISTS; generated ones rotate from 007.
+      imageUrl: portraitUrl(7 + ((i * 2) % (PORTRAIT_COUNT - 6))),
       availability: genSlots(seed),
     });
   }
@@ -386,7 +394,7 @@ function ExperienceDots({ value, max = 5 }) {
   );
 }
 
-function Avatar({ color, initials, size = 44 }) {
+function Avatar({ color, initials, src, size = 44 }) {
   return (
     <div
       style={{
@@ -401,14 +409,24 @@ function Avatar({ color, initials, size = 44 }) {
         fontWeight: 600,
         fontSize: size * 0.32,
         flexShrink: 0,
+        overflow: "hidden",
+        position: "relative",
       }}
     >
       {initials}
+      {src && (
+        <img
+          src={src}
+          alt=""
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          onError={(e) => { e.target.style.display = "none"; }}
+        />
+      )}
     </div>
   );
 }
 
-function VideoThumb({ color, duration = "1:02", onClick }) {
+function VideoThumb({ color, imageUrl, duration = "1:02", onClick }) {
   return (
     <div
       onClick={onClick}
@@ -423,9 +441,18 @@ function VideoThumb({ color, duration = "1:02", onClick }) {
         justifyContent: "center",
         cursor: "pointer",
         flexShrink: 0,
+        overflow: "hidden",
       }}
     >
-      <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(20,20,18,0.55)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt=""
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          onError={(e) => { e.target.style.display = "none"; }}
+        />
+      )}
+      <div style={{ position: "relative", width: 44, height: 44, borderRadius: "50%", background: "rgba(20,20,18,0.55)", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Play size={18} color="#fff" style={{ marginLeft: 2 }} fill="#fff" />
       </div>
       <div style={{ position: "absolute", bottom: 8, right: 10, fontSize: 11, fontWeight: 500, background: "rgba(0,0,0,0.5)", color: "#fff", padding: "2px 7px", borderRadius: 5 }}>
@@ -435,28 +462,6 @@ function VideoThumb({ color, duration = "1:02", onClick }) {
   );
 }
 
-// Pool of Unsplash Source queries for generated therapists — varied but
-// consistently warm/professional. Seed is used to pick consistently per therapist.
-const GITHUB_PORTRAITS = [
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a01.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a02.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a03.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a04.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a05.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a06.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a07.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a08.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_a09.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b01.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b02.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b03.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b04.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b05.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b06.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b07.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b08.jpg",
-  "https://raw.githubusercontent.com/tarjetas-adam/illik/main/p_b09.jpg",
-];
 
 function BrowseThumb({ imageUrl, seed = 0, color, onClick }) {
   const src = imageUrl || GITHUB_PORTRAITS[seed % GITHUB_PORTRAITS.length];
@@ -998,7 +1003,7 @@ function ProfileView({ therapist, onBack, onBook, savedIds, toggleSave }) {
       </div>
 
       <div style={{ position: "relative", marginBottom: 20 }}>
-        <VideoThumb color={therapist.videoColor} duration="1:02" />
+        <VideoThumb color={therapist.videoColor} imageUrl={therapist.imageUrl} duration="1:02" />
         <button
           onClick={() => toggleSave(therapist.id)}
           style={{ position: "absolute", top: 14, right: 14, background: "rgba(20,20,18,0.6)", border: "none", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
@@ -1100,7 +1105,7 @@ function BookingView({ therapist, onBack, onConfirm, isLoggedIn, onRequireLogin 
       </button>
 
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-        <Avatar color={therapist.avatarColor} initials={therapist.initials} size={48} />
+        <Avatar color={therapist.avatarColor} initials={therapist.initials} src={therapist.imageUrl} size={48} />
         <div>
           <div style={{ fontSize: 16, fontWeight: 600, color: "#ECE8DD" }}>{therapist.name}</div>
           <div style={{ fontSize: 12.5, color: "#8a877d" }}>{formatPrice(therapist.price)} / alkalom</div>
@@ -1249,7 +1254,7 @@ function TherapistDashboard({ therapist, onLogout, mockBookings }) {
     <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", minHeight: "75vh" }}>
       <div style={{ borderRight: "0.5px solid #232320", padding: 20 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-          <Avatar color={therapist.avatarColor} initials={therapist.initials} size={36} />
+          <Avatar color={therapist.avatarColor} initials={therapist.initials} src={therapist.imageUrl} size={36} />
           <div style={{ fontSize: 13.5, color: "#ECE8DD", fontWeight: 600 }}>{therapist.name}</div>
         </div>
         <SideTab icon={<User size={15} />} label="Profil" active={tab === "profile"} onClick={() => setTab("profile")} />
@@ -1267,7 +1272,7 @@ function TherapistDashboard({ therapist, onLogout, mockBookings }) {
 
             <div style={{ marginBottom: 20 }}>
               <FilterLabel>Bemutatkozó videó</FilterLabel>
-              <VideoThumb color={editTherapist.videoColor} />
+              <VideoThumb color={editTherapist.videoColor} imageUrl={editTherapist.imageUrl} />
               <button style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 10, background: "transparent", border: "0.5px solid #2e2e2b", color: "#9a978c", borderRadius: 8, padding: "8px 14px", fontSize: 12.5, cursor: "pointer" }}>
                 <Video size={14} /> Új videó feltöltése
               </button>
