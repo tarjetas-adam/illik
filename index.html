@@ -14,8 +14,6 @@
   <script src="https://unpkg.com/@babel/standalone@7.23.2/babel.min.js"></script>
   <script>
     const {useState,useEffect,useRef} = React;
-    const _ic = (pp) => ({size:20,color:"currentColor",fill:"none",style:undefined,...p}={}) =>
-      React.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",width:p.size||20,height:p.size||20,viewBox:"0 0 24 24",fill:p.fill||"none",stroke:p.color||"currentColor",strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round",style:p.style},...pp.map(d=>React.createElement("path",{d})));
     const mkI = (paths) => function Icon({size=20,color="currentColor",fill="none",style,...rest}={}) {
       return React.createElement("svg",{xmlns:"http://www.w3.org/2000/svg",width:size,height:size,viewBox:"0 0 24 24",fill,stroke:color,strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round",style,...rest},...paths.map(d=>React.createElement("path",{d})));
     };
