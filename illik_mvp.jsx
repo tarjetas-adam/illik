@@ -41,11 +41,14 @@ const TOPIC_GROUPS = [
   { label: "Személyes növekedés", items: ["Konfliktuskezelés", "Pályaválasztás, karrier"] },
 ];
 
-// 252 cropped portraits in the repo: ai_therapist_001.jpg … ai_therapist_252.jpg
-const PORTRAIT_COUNT = 252;
+// Portraits in the repo: ai_therapist_019.jpg … ai_therapist_252.jpg
+// (001–018 are deleted — never reference them)
+const PORTRAIT_FIRST = 19;
+const PORTRAIT_LAST = 252;
+const PORTRAIT_COUNT = PORTRAIT_LAST - PORTRAIT_FIRST + 1; // 234
 const portraitUrl = (n) =>
   `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${String(n).padStart(3, "0")}.jpg`;
-const GITHUB_PORTRAITS = Array.from({ length: PORTRAIT_COUNT }, (_, i) => portraitUrl(i + 1));
+const GITHUB_PORTRAITS = Array.from({ length: PORTRAIT_COUNT }, (_, i) => portraitUrl(PORTRAIT_FIRST + i));
 
 const BASE_THERAPISTS = [
   {
@@ -64,7 +67,7 @@ const BASE_THERAPISTS = [
     videoColor: "#76875A",
     avatarColor: "#76875A",
     initials: "KA",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_001.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_019.jpg",
     availability: genSlots(1),
   },
   {
@@ -83,7 +86,7 @@ const BASE_THERAPISTS = [
     videoColor: "#CECBF6",
     avatarColor: "#CECBF6",
     initials: "VM",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_002.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_020.jpg",
     availability: genSlots(2),
   },
   {
@@ -102,7 +105,7 @@ const BASE_THERAPISTS = [
     videoColor: "#F5C4B3",
     avatarColor: "#F5C4B3",
     initials: "TG",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_003.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_021.jpg",
     availability: genSlots(3),
   },
   {
@@ -121,7 +124,7 @@ const BASE_THERAPISTS = [
     videoColor: "#E8D5A8",
     avatarColor: "#E8D5A8",
     initials: "SD",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_004.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_022.jpg",
     availability: genSlots(4),
   },
   {
@@ -140,7 +143,7 @@ const BASE_THERAPISTS = [
     videoColor: "#A8C5E8",
     avatarColor: "#A8C5E8",
     initials: "NP",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_005.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_023.jpg",
     availability: genSlots(5),
   },
   {
@@ -159,7 +162,7 @@ const BASE_THERAPISTS = [
     videoColor: "#D4A8C5",
     avatarColor: "#D4A8C5",
     initials: "VM",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_006.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_024.jpg",
     availability: genSlots(6),
   },
 ];
@@ -260,8 +263,8 @@ function generateTherapists(count) {
       videoColor: color,
       avatarColor: color,
       initials,
-      // Portraits 001–006 are taken by BASE_THERAPISTS; generated ones rotate from 007.
-      imageUrl: portraitUrl(7 + ((i * 2) % (PORTRAIT_COUNT - 6))),
+      // Portraits 019–024 are taken by BASE_THERAPISTS; generated ones rotate from 025.
+      imageUrl: portraitUrl(PORTRAIT_FIRST + 6 + ((i * 2) % (PORTRAIT_COUNT - 6))),
       availability: genSlots(seed),
     });
   }
