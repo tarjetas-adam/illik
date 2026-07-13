@@ -347,7 +347,51 @@ function generateTherapists(count) {
   return generated;
 }
 
-const THERAPISTS = [...BASE_THERAPISTS, ...generateTherapists(94)];
+// Hosszú, életszerű bemutatkozó szövegek — determinisztikusan, seed alapján összerakva
+const BIO_OPENINGS = [
+  "Azt gondolom, mindannyiunk életében adódnak időszakok, amikor a megszokott megoldásaink már nem működnek: elfáradunk, összezavarodunk, és úgy érezzük, egyedül nem jutunk tovább. Ilyenkor nem a gyengeség jele segítséget kérni — épp ellenkezőleg. Egy másik emberrel folytatott őszinte beszélgetésben sokkal tisztábban rálátunk önmagunkra: hol akadunk el, miért ismételjük ugyanazokat a köröket, és mi az, amire valójában szükségünk lenne. Munkámban arra törekszem, hogy egy elfogadó, ítélkezésmentes légkörben közösen értsük meg a problémák gyökerét, és találjuk meg a változáshoz vezető utat.",
+  "Hiszem, hogy a legtöbb elakadásunk mögött érthető történet áll — csak sokszor egyedül nehéz meglátni. A terápiás beszélgetés abban különbözik a baráti beszélgetéstől, hogy védett keretet ad: itt nem kell megfelelni, nem kell erősnek látszani, és ki lehet mondani azt is, amit máshol nem. Tapasztalatom szerint már önmagában az is gyógyító, ha érzéseinket, hiedelmeinket őszintén szavakba öntjük, és valaki valóban meghallgat. Erre a közös munkára hívom azokat, akik változtatnának az életükön, de nem tudják, hol kezdjék.",
+  "Sokan akkor fordulnak pszichológushoz, amikor már minden mást kipróbáltak — és ez teljesen rendben van így. A terápia nem varázslat: közös, néha lassú, de mélyreható munka, amelyben fokozatosan érthetővé válik, miért működünk úgy, ahogy, és mit tehetünk másképp. Számomra a legfontosabb a bizalom: olyan légkört igyekszem teremteni, ahol a nehéz témákról is biztonságban lehet beszélni, mindig a kliens saját tempójában.",
+  "Meggyőződésem, hogy problémáink jelentős része kapcsolatainkban keletkezik — és kapcsolatban is gyógyul. A terápiás kapcsolat különleges lehetőséget ad arra, hogy megértsük ismétlődő mintáinkat: miért választjuk újra és újra ugyanazokat a helyzeteket, és hogyan írhatók át a berögzült, már nem szolgáló megoldási módok. Empátiával és őszinte visszajelzésekkel kísérem az ezen az úton elindulókat.",
+  "Az életünk során mindannyian kerülünk olyan helyzetbe, amikor elfogynak az eszközeink: nem értjük, mi történik velünk, vagy értjük, de nem tudunk változtatni rajta. Ilyenkor egy külső, szakmai nézőpont segíthet meglátni azt, amit belülről nem lehet. Munkámban nagy hangsúlyt fektetek arra, hogy a hozzám fordulók ne csak a tüneteikkel foglalkozzanak, hanem megértsék azok hátterét is — mert tartós változás csak így lehetséges.",
+];
+const BIO_UNIS = [
+  "az ELTE Pszichológiai Intézetében",
+  "a Pécsi Tudományegyetemen",
+  "a Szegedi Tudományegyetemen",
+  "a Debreceni Egyetemen",
+  "a Károli Gáspár Református Egyetemen",
+];
+const BIO_APPROACHES = [
+  "a pszichodinamikus gondolkodás, így többségében hosszabb terápiás folyamatokban dolgozom, amelyek lehetőséget adnak a mélyebb érzelmi elakadások megdolgozására",
+  "a kognitív viselkedésterápiás megközelítés: strukturált, célorientált módon dolgozom, és fontos számomra, hogy klienseim a mindennapokban is használható eszközöket kapjanak",
+  "a rendszerszemlélet, amely keretet ad a párokkal és családokkal való munkához — a nehézségeket sosem önmagukban, hanem a kapcsolati összefüggéseikben vizsgálom",
+  "a személyközpontú megközelítés: hiszek abban, hogy elfogadó, hiteles kapcsolatban mindenkiben megvan a képesség a fejlődésre",
+  "a sématerápiás szemlélet, amely segít felismerni és átírni a gyerekkorban gyökerező, mélyen rögzült érzelmi mintázatokat",
+  "az integratív szemlélet: nem egyetlen módszerhez ragaszkodom, hanem ahhoz igazítom az eszközöket, amire az adott embernek az adott helyzetben szüksége van",
+];
+const BIO_CLIENTS = [
+  "egyéni felnőtt klienseket fogadok",
+  "felnőtteket és fiatal felnőtteket fogadok egyéni terápiában",
+  "párokat fogadok, valamint egyéni esetvezetést viszek",
+  "egyéni klienseket fogadok, és kiemelt területem a munkahelyi kiégés",
+];
+function genLongBio(seed, years) {
+  const p = (arr, s) => arr[s % arr.length];
+  const gradYear = 2026 - years - 4 - (seed % 3);
+  const practiceYear = 2026 - years;
+  const second =
+    `${gradYear}-ben végeztem pszichológusként ${p(BIO_UNIS, seed)}. ` +
+    `${practiceYear} óta magánrendelés keretei között ${p(BIO_CLIENTS, seed >> 2)}. ` +
+    `Szemléletemben meghatározó ${p(BIO_APPROACHES, seed >> 1)}.`;
+  return [p(BIO_OPENINGS, seed), second];
+}
+
+const THERAPISTS = [...BASE_THERAPISTS, ...generateTherapists(94)].map((t) => ({
+  ...t,
+  bioLong: genLongBio(t.id * 13 + 7, t.years),
+  acceptsNew: t.id % 5 !== 0, // demó: kb. minden 5. terapeuta várólistás
+}));
 
 function formatDate(d) {
   return d.toLocaleDateString("hu-HU", { month: "short", day: "numeric", weekday: "short" });
@@ -886,6 +930,9 @@ const selectStyle = {
 
 function ResultsView({ filters, setFilters, savedIds, toggleSave, onSelectTherapist }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
+  // A modalban csak piszkozatot szerkesztünk; élesítés a "Mutasd a találatokat" gombbal
+  const [draft, setDraft] = useState(filters);
+  const openFilters = () => { setDraft(filters); setFiltersOpen(true); };
   const filtered = THERAPISTS.filter((t) => {
     if (filters.topic && !t.tags.includes(filters.topic)) return false;
     if (filters.location === "Online" && !t.locations.includes("Online")) return false;
@@ -897,11 +944,13 @@ function ResultsView({ filters, setFilters, savedIds, toggleSave, onSelectTherap
     <div style={{ padding: "20px 28px 60px", maxWidth: 1100, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
         <div>
-          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#ECE8DD", fontWeight: 400, marginBottom: 4 }}>Pszichológusok</h1>
+          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#ECE8DD", fontWeight: 400, marginBottom: 4 }}>
+            Pszichológusok{filters.topic ? ` – ${filters.topic}` : ""}
+          </h1>
           <div style={{ fontSize: 13, color: "#6a6862" }}>{filtered.length} találat</div>
         </div>
         <button
-          onClick={() => setFiltersOpen(!filtersOpen)}
+          onClick={openFilters}
           style={{
             display: "flex",
             alignItems: "center",
@@ -920,40 +969,59 @@ function ResultsView({ filters, setFilters, savedIds, toggleSave, onSelectTherap
       </div>
 
       {filtersOpen && (
-        <div style={{ display: "flex", gap: 28, flexWrap: "wrap", background: "#121211", border: "0.5px solid #232320", borderRadius: 14, padding: 18, marginTop: 16, marginBottom: 8 }}>
-          <div>
-            <FilterLabel>Téma</FilterLabel>
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", maxWidth: 420 }}>
-              {TOPICS.slice(0, 8).map((t) => (
-                <Pill key={t} active={filters.topic === t} onClick={() => setFilters({ ...filters, topic: filters.topic === t ? "" : t })}>
-                  {t}
-                </Pill>
-              ))}
+        <div
+          onClick={() => setFiltersOpen(false)}
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{ background: "#151513", border: "0.5px solid #2e2e2b", borderRadius: 18, width: "100%", maxWidth: 560, maxHeight: "85vh", overflowY: "auto", boxShadow: "0 24px 60px rgba(0,0,0,0.5)" }}
+          >
+            <div style={{ position: "relative", padding: "16px 20px", borderBottom: "0.5px solid #232320" }}>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "#ECE8DD", textAlign: "center" }}>Szűrők</div>
+              <button onClick={() => setFiltersOpen(false)} style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "transparent", border: "none", color: "#9a978c", fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
             </div>
-          </div>
-          <div>
-            <FilterLabel>Helyszín</FilterLabel>
-            <div style={{ display: "flex", gap: 6 }}>
-              <Pill active={filters.location === "Budapest (összes)"} onClick={() => setFilters({ ...filters, location: "Budapest (összes)" })}>
-                Budapest
-              </Pill>
-              <Pill active={filters.location === "Online"} onClick={() => setFilters({ ...filters, location: "Online" })}>
-                Online
-              </Pill>
+            <div style={{ padding: "20px 20px 8px", display: "flex", flexDirection: "column", gap: 22 }}>
+              <div>
+                <FilterLabel>Téma</FilterLabel>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {TOPICS.slice(0, 8).map((t) => (
+                    <Pill key={t} active={draft.topic === t} onClick={() => setDraft({ ...draft, topic: draft.topic === t ? "" : t })}>
+                      {t}
+                    </Pill>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <FilterLabel>Helyszín</FilterLabel>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <Pill active={draft.location === "Budapest (összes)"} onClick={() => setDraft({ ...draft, location: "Budapest (összes)" })}>
+                    Budapest
+                  </Pill>
+                  <Pill active={draft.location === "Online"} onClick={() => setDraft({ ...draft, location: "Online" })}>
+                    Online
+                  </Pill>
+                </div>
+              </div>
+              <div>
+                <FilterLabel>Max. ár / alkalom</FilterLabel>
+                <input
+                  type="range"
+                  min={8000}
+                  max={30000}
+                  step={1000}
+                  value={draft.maxPrice || 30000}
+                  onChange={(e) => setDraft({ ...draft, maxPrice: parseInt(e.target.value) })}
+                  style={{ width: "100%", accentColor: "#76875A" }}
+                />
+                <div style={{ fontSize: 12, color: "#8a877d", marginTop: 4 }}>max {formatPrice(draft.maxPrice || 30000)}</div>
+              </div>
             </div>
-          </div>
-          <div style={{ minWidth: 160 }}>
-            <FilterLabel>Max. ár / alkalom</FilterLabel>
-            <input
-              type="range"
-              min={8000}
-              max={30000}
-              step={1000}
-              value={filters.maxPrice || 30000}
-              onChange={(e) => setFilters({ ...filters, maxPrice: parseInt(e.target.value) })}
-              style={{ width: "100%", accentColor: "#76875A" }}
-            />
-            <div style={{ fontSize: 12, color: "#8a877d", marginTop: 4 }}>max {formatPrice(filters.maxPrice || 30000)}</div>
+            <div style={{ padding: "14px 20px 18px", borderTop: "0.5px solid #232320", marginTop: 14 }}>
+              <PrimaryButton onClick={() => { setFilters(draft); setFiltersOpen(false); }} style={{ width: "100%", padding: "12px" }}>
+                Mutasd a találatokat
+              </PrimaryButton>
+            </div>
           </div>
         </div>
       )}
@@ -974,24 +1042,18 @@ function ResultsView({ filters, setFilters, savedIds, toggleSave, onSelectTherap
                 <Heart size={14} color={savedIds.includes(t.id) ? "#E89A8A" : "#fff"} fill={savedIds.includes(t.id) ? "#E89A8A" : "none"} />
               </button>
             </div>
-            <div style={{ padding: "14px 16px 16px" }}>
+            <div style={{ padding: "14px 16px 16px", height: 74, boxSizing: "border-box" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                <div style={{ fontSize: 15, fontWeight: 600, color: "#ECE8DD" }}>{t.name}</div>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "#ECE8DD", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.name}</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 4, flexShrink: 0, marginLeft: 10, width: 36, justifyContent: "flex-end" }}>
                   <Star size={11} fill="#E8D5A8" color="#E8D5A8" />
                   <span style={{ fontSize: 12, color: "#9a978c" }}>{t.rating.toFixed(1)}</span>
                 </div>
               </div>
-              <div style={{
-                fontSize: 12,
-                color: "#8a877d",
-                lineHeight: 1.5,
-                minHeight: "2.25em",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}>{t.tags.slice(0, 3).join(", ")}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12, color: t.acceptsNew ? "#9CB380" : "#ECE8DD" }}>
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: t.acceptsNew ? "#76875A" : "#8a877d", flexShrink: 0 }} />
+                {t.acceptsNew ? "Van szabad időpontja" : "Várólista"}
+              </div>
             </div>
           </div>
         ))}
@@ -1070,61 +1132,54 @@ function FilterLabel({ children }) {
 function ProfileView({ therapist, onBack, onBook, savedIds, toggleSave }) {
   if (!therapist) return null;
   return (
-    <div style={{ maxWidth: 720, margin: "0 auto", padding: "24px 24px 60px" }}>
+    <div style={{ padding: "24px 24px 60px" }}>
+      {/* vissza gomb a lap bal szélén */}
       <button onClick={onBack} style={{ display: "flex", alignItems: "center", gap: 6, background: "transparent", border: "none", color: "#9a978c", fontSize: 13, cursor: "pointer", marginBottom: 16 }}>
         <ChevronLeft size={16} /> Vissza a találatokhoz
       </button>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13.5, color: "#d4d2c8" }}>
-          <Star size={14} fill="#E8D5A8" color="#E8D5A8" /> {therapist.rating} ({therapist.reviewCount} értékelés)
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        {/* 1. videó legfelül */}
+        <div style={{ position: "relative", marginBottom: 20 }}>
+          <VideoThumb color={therapist.videoColor} imageUrl={therapist.imageUrl} duration="1:02" />
+          <button
+            onClick={() => toggleSave(therapist.id)}
+            style={{ position: "absolute", top: 14, right: 14, background: "rgba(20,20,18,0.6)", border: "none", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 2 }}
+          >
+            <Heart size={17} color={savedIds.includes(therapist.id) ? "#E89A8A" : "#fff"} fill={savedIds.includes(therapist.id) ? "#E89A8A" : "none"} />
+          </button>
         </div>
-      </div>
 
-      <div style={{ position: "relative", marginBottom: 20 }}>
-        <VideoThumb color={therapist.videoColor} imageUrl={therapist.imageUrl} duration="1:02" />
-        <button
-          onClick={() => toggleSave(therapist.id)}
-          style={{ position: "absolute", top: 14, right: 14, background: "rgba(20,20,18,0.6)", border: "none", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
-        >
-          <Heart size={17} color={savedIds.includes(therapist.id) ? "#E89A8A" : "#fff"} fill={savedIds.includes(therapist.id) ? "#E89A8A" : "none"} />
-        </button>
-      </div>
+        {/* 2. név balra, értékelés jobbra (hány értékelésből) */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, marginBottom: 4 }}>
+          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, color: "#ECE8DD", fontWeight: 400, margin: 0 }}>{therapist.name}</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 13.5, color: "#d4d2c8", flexShrink: 0 }}>
+            <Star size={14} fill="#E8D5A8" color="#E8D5A8" /> {therapist.rating.toFixed(1)}
+            <span style={{ color: "#8a877d" }}>({therapist.reviewCount} értékelés)</span>
+          </div>
+        </div>
 
-      <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, color: "#ECE8DD", marginBottom: 4, fontWeight: 400 }}>{therapist.name}</h1>
-      <div style={{ fontSize: 14, color: "#9a978c", marginBottom: 16 }}>{therapist.title}</div>
+        {/* 3. végzettség */}
+        <div style={{ fontSize: 14, color: "#9a978c", marginBottom: 18 }}>{therapist.title}</div>
 
-      <div style={{ background: "#1d1e16", border: "0.5px solid #232320", borderRadius: 12, padding: "20px 16px", marginBottom: 18 }}>
-        <SpectrumBar leftLabel="támogató" rightLabel="konfrontatív" value={therapist.spectrum.supportive} />
-        <SpectrumBar leftLabel="strukturált" rightLabel="intuitív" value={therapist.spectrum.structured} />
-        <SpectrumBar leftLabel="közvetlen" rightLabel="formális" value={therapist.spectrum.direct} />
-        <ExperienceRow value={therapist.spectrum.experienced} />
-      </div>
-
-      <div style={{ marginBottom: 18, fontSize: 13.5, color: "#d4d2c8" }}>
-        <span>Értékelhető 3. alkalom után</span>
-      </div>
-
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 18 }}>
-        {therapist.tags.map((tag) => (
-          <span key={tag} style={{ fontSize: 11.5, padding: "4px 10px", borderRadius: 20, background: "#1f1f1c", color: "#9a978c" }}>
-            {tag}
-          </span>
+        {/* 4. bemutatkozó leírás */}
+        <h3 style={{ fontSize: 14, color: "#ECE8DD", marginBottom: 8, fontWeight: 600 }}>Bemutatkozás</h3>
+        {(therapist.bioLong || [therapist.bio]).map((para, i) => (
+          <p key={i} style={{ fontSize: 14, color: "#b5b2a8", lineHeight: 1.65, marginBottom: 12 }}>{para}</p>
         ))}
+
+        {/* 5. helyszín, nyelv, ár */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, margin: "22px 0 24px", padding: 16, background: "#151513", border: "0.5px solid #232320", borderRadius: 12 }}>
+          <InfoBlock icon={<MapPin size={15} />} label="Helyszín" value={therapist.locations.join(", ")} />
+          <InfoBlock icon={<Globe size={15} />} label="Nyelvek" value={therapist.languages.join(", ")} />
+          <InfoBlock icon={<Clock size={15} />} label="Ár" value={`${formatPrice(therapist.price)} / alkalom`} />
+        </div>
+
+        {/* 6. időpontfoglalás */}
+        <PrimaryButton onClick={() => onBook(therapist)} style={{ width: "100%", padding: "14px", fontSize: 15 }}>
+          Időpont foglalása
+        </PrimaryButton>
       </div>
-
-      <h3 style={{ fontSize: 14, color: "#ECE8DD", marginBottom: 8, fontWeight: 600 }}>Rólam</h3>
-      <p style={{ fontSize: 14, color: "#b5b2a8", lineHeight: 1.6, marginBottom: 22 }}>{therapist.bio}</p>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 24, padding: 16, background: "#151513", border: "0.5px solid #232320", borderRadius: 12 }}>
-        <InfoBlock icon={<MapPin size={15} />} label="Helyszín" value={therapist.locations.join(", ")} />
-        <InfoBlock icon={<Clock size={15} />} label="Ár" value={`${formatPrice(therapist.price)} / alkalom`} />
-        <InfoBlock icon={<Globe size={15} />} label="Nyelvek" value={therapist.languages.join(", ")} />
-      </div>
-
-      <PrimaryButton onClick={() => onBook(therapist)} style={{ width: "100%", padding: "14px", fontSize: 15 }}>
-        Időpont foglalása
-      </PrimaryButton>
     </div>
   );
 }
