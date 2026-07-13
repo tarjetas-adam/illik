@@ -41,13 +41,19 @@ const TOPIC_GROUPS = [
   { label: "Személyes növekedés", items: ["Konfliktuskezelés", "Pályaválasztás, karrier"] },
 ];
 
-// Portraits in the repo: ai_therapist_019.jpg … ai_therapist_252.jpg
-// (001–018 are deleted — never reference them)
+// Legacy (nem-jelöletlen) portrék a repóban: ai_therapist_019.jpg … ai_therapist_252.jpg
+// (001–018 törölve — soha ne hivatkozz rájuk)
 const PORTRAIT_FIRST = 19;
 const PORTRAIT_LAST = 252;
 const PORTRAIT_COUNT = PORTRAIT_LAST - PORTRAIT_FIRST + 1; // 234
 const portraitUrl = (n) =>
   `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${String(n).padStart(3, "0")}.jpg`;
+// Nemhez kötött portrék: ai_therapist_f_001…f_015 (nők), ai_therapist_m_001…m_012 (férfiak).
+// Ha új nem-jelölt képek kerülnek fel, csak ezt a két számot kell növelni:
+const FEMALE_PORTRAIT_COUNT = 15;
+const MALE_PORTRAIT_COUNT = 12;
+const portraitUrlG = (g, n) =>
+  `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${g}_${String(n).padStart(3, "0")}.jpg`;
 const GITHUB_PORTRAITS = Array.from({ length: PORTRAIT_COUNT }, (_, i) => portraitUrl(PORTRAIT_FIRST + i));
 
 const BASE_THERAPISTS = [
@@ -67,7 +73,7 @@ const BASE_THERAPISTS = [
     videoColor: "#76875A",
     avatarColor: "#76875A",
     initials: "KA",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_019.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_f_001.jpg",
     availability: genSlots(1),
   },
   {
@@ -86,7 +92,7 @@ const BASE_THERAPISTS = [
     videoColor: "#CECBF6",
     avatarColor: "#CECBF6",
     initials: "VM",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_020.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_m_001.jpg",
     availability: genSlots(2),
   },
   {
@@ -105,7 +111,7 @@ const BASE_THERAPISTS = [
     videoColor: "#F5C4B3",
     avatarColor: "#F5C4B3",
     initials: "TG",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_021.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_f_002.jpg",
     availability: genSlots(3),
   },
   {
@@ -124,7 +130,7 @@ const BASE_THERAPISTS = [
     videoColor: "#E8D5A8",
     avatarColor: "#E8D5A8",
     initials: "SD",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_022.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_f_003.jpg",
     availability: genSlots(4),
   },
   {
@@ -143,7 +149,7 @@ const BASE_THERAPISTS = [
     videoColor: "#A8C5E8",
     avatarColor: "#A8C5E8",
     initials: "NP",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_023.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_m_002.jpg",
     availability: genSlots(5),
   },
   {
@@ -162,7 +168,7 @@ const BASE_THERAPISTS = [
     videoColor: "#D4A8C5",
     avatarColor: "#D4A8C5",
     initials: "VM",
-    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_024.jpg",
+    imageUrl: "https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_f_004.jpg",
     availability: genSlots(6),
   },
 ];
@@ -211,6 +217,8 @@ function pick(rng, arr) {
 
 function generateTherapists(count) {
   const generated = [];
+  const fNext = { n: 5 }; // f_001–f_004 a base terapeutáké
+  const mNext = { n: 3 }; // m_001–m_002 a base terapeutáké
   for (let i = 0; i < count; i++) {
     const seed = 1000 + i;
     const rng = mulberry32(seed);
@@ -263,8 +271,14 @@ function generateTherapists(count) {
       videoColor: color,
       avatarColor: color,
       initials,
-      // Portraits 019–024 are taken by BASE_THERAPISTS; generated ones rotate from 025.
-      imageUrl: portraitUrl(PORTRAIT_FIRST + 6 + ((i * 2) % (PORTRAIT_COUNT - 6))),
+      // Nemhelyes portré, amíg van a készletben (f_005-től / m_003-tól, mert
+      // f_001–f_004 és m_001–m_002 a base terapeutáké); utána legacy (nem-jelöletlen) pool.
+      imageUrl:
+        isFemale && fNext.n <= FEMALE_PORTRAIT_COUNT
+          ? portraitUrlG("f", fNext.n++)
+          : !isFemale && mNext.n <= MALE_PORTRAIT_COUNT
+          ? portraitUrlG("m", mNext.n++)
+          : portraitUrl(PORTRAIT_FIRST + ((i * 2) % PORTRAIT_COUNT)),
       availability: genSlots(seed),
     });
   }
