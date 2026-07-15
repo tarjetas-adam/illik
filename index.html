@@ -112,8 +112,8 @@ const portraitUrl = (n) =>
   `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${String(n).padStart(3, "0")}.jpg`;
 // Nemhez kötött portrék: ai_therapist_f_001…f_015 (nők), ai_therapist_m_001…m_012 (férfiak).
 // Ha új nem-jelölt képek kerülnek fel, csak ezt a két számot kell növelni:
-const FEMALE_PORTRAIT_COUNT = 44;
-const MALE_PORTRAIT_COUNT = 37;
+const FEMALE_PORTRAIT_COUNT = 59;
+const MALE_PORTRAIT_COUNT = 49;
 const portraitUrlG = (g, n) =>
   `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${g}_${String(n).padStart(3, "0")}.jpg`;
 const GITHUB_PORTRAITS = Array.from({ length: PORTRAIT_COUNT }, (_, i) => portraitUrl(PORTRAIT_FIRST + i));
@@ -933,8 +933,10 @@ function ResultsView({ filters, setFilters, savedIds, toggleSave, onSelectTherap
   // A modalban csak piszkozatot szerkesztünk; élesítés a "Mutasd a találatokat" gombbal
   const [draft, setDraft] = useState(filters);
   const openFilters = () => { setDraft(filters); setFiltersOpen(true); };
+  // "Nem tudom megnevezni" választásakor nincs témaszűrés — mindenki látszik
+  const topicActive = filters.topic && filters.topic !== "Nem tudom megnevezni";
   const filtered = THERAPISTS.filter((t) => {
-    if (filters.topic && !t.tags.includes(filters.topic)) return false;
+    if (topicActive && !t.tags.includes(filters.topic)) return false;
     if (filters.location === "Online" && !t.locations.includes("Online")) return false;
     if (filters.maxPrice && t.price > filters.maxPrice) return false;
     return true;
@@ -945,7 +947,7 @@ function ResultsView({ filters, setFilters, savedIds, toggleSave, onSelectTherap
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
         <div>
           <h1 style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#ECE8DD", fontWeight: 400, marginBottom: 4 }}>
-            Pszichológusok{filters.topic ? ` – ${filters.topic}` : ""}
+            Pszichológusok{topicActive ? ` – ${filters.topic}` : ""}
           </h1>
           <div style={{ fontSize: 13, color: "#6a6862" }}>{filtered.length} találat</div>
         </div>
