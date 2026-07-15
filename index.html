@@ -112,8 +112,8 @@ const portraitUrl = (n) =>
   `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${String(n).padStart(3, "0")}.jpg`;
 // Nemhez kötött portrék: ai_therapist_f_001…f_015 (nők), ai_therapist_m_001…m_012 (férfiak).
 // Ha új nem-jelölt képek kerülnek fel, csak ezt a két számot kell növelni:
-const FEMALE_PORTRAIT_COUNT = 29;
-const MALE_PORTRAIT_COUNT = 25;
+const FEMALE_PORTRAIT_COUNT = 44;
+const MALE_PORTRAIT_COUNT = 37;
 const portraitUrlG = (g, n) =>
   `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${g}_${String(n).padStart(3, "0")}.jpg`;
 const GITHUB_PORTRAITS = Array.from({ length: PORTRAIT_COUNT }, (_, i) => portraitUrl(PORTRAIT_FIRST + i));
