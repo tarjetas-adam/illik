@@ -116,6 +116,13 @@ const FEMALE_PORTRAIT_COUNT = 74;
 const MALE_PORTRAIT_COUNT = 61;
 const portraitUrlG = (g, n) =>
   `https://raw.githubusercontent.com/tarjetas-adam/illik/main/ai_therapist_${g}_${String(n).padStart(3, "0")}.jpg`;
+// Törölt (nem létező) képszámok — a kiosztás átugorja őket:
+const MISSING_PORTRAITS = { f: [33, 65], m: [47] };
+const takePortrait = (counter, g, max) => {
+  while (MISSING_PORTRAITS[g].includes(counter.n)) counter.n++;
+  if (counter.n > max) return null;
+  return portraitUrlG(g, counter.n++);
+};
 const GITHUB_PORTRAITS = Array.from({ length: PORTRAIT_COUNT }, (_, i) => portraitUrl(PORTRAIT_FIRST + i));
 
 const BASE_THERAPISTS = [
@@ -336,11 +343,10 @@ function generateTherapists(count) {
       // Nemhelyes portré, amíg van a készletben (f_005-től / m_003-tól, mert
       // f_001–f_004 és m_001–m_002 a base terapeutáké); utána legacy (nem-jelöletlen) pool.
       imageUrl:
-        isFemale && fNext.n <= FEMALE_PORTRAIT_COUNT
-          ? portraitUrlG("f", fNext.n++)
-          : !isFemale && mNext.n <= MALE_PORTRAIT_COUNT
-          ? portraitUrlG("m", mNext.n++)
-          : portraitUrl(PORTRAIT_FIRST + ((i * 2) % PORTRAIT_COUNT)),
+        (isFemale
+          ? takePortrait(fNext, "f", FEMALE_PORTRAIT_COUNT)
+          : takePortrait(mNext, "m", MALE_PORTRAIT_COUNT)) ||
+        portraitUrl(PORTRAIT_FIRST + ((i * 2) % PORTRAIT_COUNT)),
       availability: genSlots(seed),
     });
   }
